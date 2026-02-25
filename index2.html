@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday ❤️</title>
+
+<style>
+  body{
+    margin:0;
+    padding:0;
+    font-family:"Segoe UI", cursive;
+    background: linear-gradient(180deg,#ffd6eb,#ffeaf5,#fff0f8);
+    overflow-x:hidden;
+  }
+
+  /* ================== START OVERLAY ================== */
+  .overlay{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), rgba(255,214,235,0.92), rgba(255,240,248,0.98));
+    backdrop-filter: blur(10px);
+  }
+
+  .overlay-card{
+    width:min(92vw, 520px);
+    padding:28px 22px;
+    border-radius:26px;
+    border:1px solid rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.62);
+    box-shadow: 0 0 40px rgba(255,105,180,0.25);
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .typing{
+    font-size:34px;
+    font-weight:900;
+    color:#ff2f93;
+    text-shadow:0 0 18px rgba(255,105,180,0.35);
+    min-height:46px;
+    letter-spacing:1px;
+  }
+
+  .cursor{
+    display:inline-block;
+    width:10px;
+    margin-left:6px;
+    border-radius:2px;
+    background:#ff4fa3;
+    height:30px;
+    transform:translateY(5px);
+    animation: blink 0.7s infinite;
+  }
+
+  @keyframes blink{
+    0%,49%{opacity:1}
+    50%,100%{opacity:0}
+  }
+
+  .loader-hearts{
+    margin:18px auto 6px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .loader-hearts span{
+    font-size:26px;
+    filter: drop-shadow(0 0 10px rgba(255,105,180,0.2));
+    animation: bounce 0.9s infinite;
+    opacity:0.9;
+  }
+  .loader-hearts span:nth-child(1){ animation-delay:0s; }
+  .loader-hearts span:nth-child(2){ animation-delay:0.08s; }
+  .loader-hearts span:nth-child(3){ animation-delay:0.16s; }
+  .loader-hearts span:nth-child(4){ animation-delay:0.24s; }
+  .loader-hearts span:nth-child(5){ animation-delay:0.32s; }
+  .loader-hearts span:nth-child(6){ animation-delay:0.40s; }
+  .loader-hearts span:nth-child(7){ animation-delay:0.48s; }
+
+  @keyframes bounce{
+    0%,100%{ transform:translateY(0) scale(1); }
+    50%{ transform:translateY(-10px) scale(1.08); }
+  }
+
+  .loading-note{
+    margin-top:10px;
+    font-size:16px;
+    font-weight:800;
+    color:#ff4fa3;
+    opacity:0.9;
+  }
+
+  .start-btn{
+    margin-top:18px;
+    display:none;
+    padding:14px 26px;
+    border:none;
+    border-radius:18px;
+    background: linear-gradient(90deg,#ff4fa3,#ff77b7,#ff4fa3);
+    color:white;
+    font-weight:900;
+    font-size:18px;
+    letter-spacing:1px;
+    box-shadow:0 0 22px rgba(255,105,180,0.35);
+    cursor:pointer;
+    transition:0.25s;
+  }
+  .start-btn:hover{
+    transform:translateY(-2px);
+  }
+
+  /* نخفي محتوى الصفحة لحد ما نضغط Start */
+  .page{
+    opacity:0;
+    transform: translateY(10px);
+    transition: 0.6s ease;
+    pointer-events:none;
+  }
+  .page.show{
+    opacity:1;
+    transform: translateY(0);
+    pointer-events:auto;
+  }
+
+  /* ================== MAIN PAGE ================== */
+  .name-bg{
+    position:fixed;
+    top:52%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:170px;
+    color:rgba(255,255,255,0.22);
+    font-weight:900;
+    letter-spacing:22px;
+    z-index:0;
+    pointer-events:none;
+    user-select:none;
+    white-space:nowrap;
+  }
+
+  .title{
+    text-align:center;
+    margin-top:95px;
+    font-size:58px;
+    color:#ff4fa3;
+    font-weight:900;
+    text-shadow:0 0 20px rgba(255,105,180,0.6);
+    z-index:2;
+    position:relative;
+  }
+
+  .name-under{
+    text-align:center;
+    margin-top:10px;
+    font-size:44px;
+    color:#ff2f93;
+    font-weight:900;
+    letter-spacing:6px;
+    text-shadow:0 0 18px rgba(255,105,180,0.45);
+    z-index:2;
+    position:relative;
+  }
+
+  .bday-date{
+    text-align:center;
+    margin-top:8px;
+    font-size:26px;
+    color:#ff77b7;
+    font-weight:900;
+    letter-spacing:3px;
+    text-shadow:0 0 15px rgba(255,105,180,0.45);
+    position:relative;
+    z-index:2;
+  }
+
+  .hearts-fixed{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+  }
+
+  .hearts-fixed span{
+    position:absolute;
+    font-size:28px;
+    opacity:0.75;
+    filter: drop-shadow(0 0 10px rgba(255,105,180,0.25));
+    user-select:none;
+  }
+
+  .balloon{
+    position:fixed;
+    width:60px;
+    height:80px;
+    background:radial-gradient(circle at 30% 30%,#fff,#ff7ac3);
+    border-radius:50%;
+    animation: balloon 12s linear infinite;
+    z-index:1;
+    pointer-events:none;
+  }
+
+  .balloon:after{
+    content:"";
+    position:absolute;
+    width:2px;
+    height:70px;
+    background:#999;
+    left:50%;
+    top:80px;
+  }
+
+  @keyframes balloon{
+    0%{ transform:translateY(110vh); }
+    100%{ transform:translateY(-140vh); }
+  }
+
+  .gallery{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:40px;
+    margin-top:70px;
+    position:relative;
+    z-index:2;
+    flex-wrap:wrap;
+    padding:0 14px;
+  }
+
+  .gallery img{
+    width:280px;
+    height:360px;
+    object-fit:cover;
+    border-radius:28px;
+    border:6px solid #ffd1e6;
+    box-shadow:
+      0 0 35px rgba(255,105,180,0.55),
+      0 0 80px rgba(255,105,180,0.25);
+    transition:0.4s;
+  }
+
+  .gallery img:hover{
+    transform:scale(1.07) rotate(-1deg);
+  }
+
+  /* مربع كلام بخلفية ورود + قلوب */
+  .message-box{
+    width:min(92vw, 920px);
+    margin:55px auto 110px;
+    padding:26px 18px;
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,0.85);
+    box-shadow: 0 0 35px rgba(255,105,180,0.22);
+    position:relative;
+    z-index:2;
+    overflow:hidden;
+
+    /* طبقات خلفية: قلوب + ورود (ستايل لطيف بدون صور خارجية) */
+    background:
+      radial-gradient(circle at 12% 18%, rgba(255,105,180,0.18) 0 18px, transparent 19px),
+      radial-gradient(circle at 86% 26%, rgba(255,180,210,0.22) 0 22px, transparent 23px),
+      radial-gradient(circle at 30% 80%, rgba(255,105,180,0.12) 0 26px, transparent 27px),
+      radial-gradient(circle at 72% 74%, rgba(255,180,210,0.18) 0 20px, transparent 21px),
+      linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0.55));
+    backdrop-filter: blur(8px);
+  }
+
+  /* زخرفة صغيرة ورود/قلوب */
+  .message-box:before{
+    content:"🌸💗  🌷🩷  🌹💞  🪻💖  🌸💗";
+    position:absolute;
+    left:50%;
+    top:12px;
+    transform:translateX(-50%);
+    font-size:20px;
+    opacity:0.75;
+    white-space:nowrap;
+    pointer-events:none;
+  }
+
+  .message-box .love{
+    text-align:center;
+    font-size:24px;
+    color:#ff4fa3;
+    margin:42px 10px 18px;
+    font-weight:800;
+    line-height:1.7;
+  }
+
+  .message-box .final-love{
+    text-align:center;
+    font-size:28px;
+    color:#ff2f93;
+    margin:10px 10px 8px;
+    font-weight:900;
+    line-height:1.9;
+    text-shadow:0 0 20px rgba(255,105,180,0.35);
+  }
+</style>
+</head>
+
+<body>
+
+<!-- ============ OVERLAY ============ -->
+<div class="overlay" id="overlay">
+  <div class="overlay-card">
+    <div class="typing"><span id="typed"></span><span class="cursor"></span></div>
+
+    <div class="loader-hearts" aria-label="loading">
+      <span>🩷</span><span>💚</span><span>🩵</span><span>❤️</span><span>💙</span><span>🧡</span><span>💛</span>
+    </div>
+
+    <div class="loading-note" id="loadingNote">Loading love... 💗</div>
+    <button class="start-btn" id="startBtn">START ✨</button>
+  </div>
+</div>
+
+<!-- ============ MAIN PAGE ============ -->
+<div class="page" id="page">
+  <div class="name-bg">JOURY</div>
+
+  <div class="hearts-fixed" id="heartsFixed"></div>
+  <div id="balloonsLayer"></div>
+
+  <div class="title">Happy Birthday 🎊🎈</div>
+  <div class="name-under">JOURY</div>
+  <div class="bday-date">26 / 2 / 2008 🎀</div>
+
+  <div class="gallery">
+    <img src="j2.jpeg" alt="photo 1">
+    <img src="j4.jpeg" alt="photo 2">
+  </div>
+
+  <!-- مربع الرسائل -->
+  <div class="message-box">
+    <div class="love">
+      My love, you are my favorite person, my sweetest peace, and the most beautiful part of my life. <br>
+      I’m grateful for you every single day — and I’ll keep choosing you, always. 💗
+    </div>
+
+    <div class="final-love">
+      My love and my life partner, may you always stay by my side every year. <br>
+      You are the dream I want to achieve and the path I want to reach. <br>
+      I love you so much, and may God never take you away from me. 💗
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ====== Typing + 5s then Start ====== */
+  const text = "Happy birthday baby";
+  const typedEl = document.getElementById("typed");
+  const startBtn = document.getElementById("startBtn");
+  const loadingNote = document.getElementById("loadingNote");
+  const overlay = document.getElementById("overlay");
+  const page = document.getElementById("page");
+
+  let i = 0;
+  function type(){
+    if(i <= text.length){
+      typedEl.textContent = text.slice(0, i);
+      i++;
+      setTimeout(type, 90);
+    }
+  }
+  type();
+
+  // بعد 5 ثواني: وقف التحميل وطلع زر Start
+  setTimeout(() => {
+    loadingNote.textContent = "Ready 💗";
+    startBtn.style.display = "inline-block";
+  }, 5000);
+
+  // لما يكبس Start: اخفي الاوفرلاي واظهر الصفحة
+  startBtn.addEventListener("click", () => {
+    overlay.style.display = "none";
+    page.classList.add("show");
+  });
+
+  /* ====== Hearts fixed ====== */
+  const heartsFixed = document.getElementById("heartsFixed");
+  const heartEmojis = ["🤍","💜","🩷","💗"];
+
+  function placeFixedHearts(count=24){
+    for(let i=0;i<count;i++){
+      const sp = document.createElement("span");
+      sp.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+      sp.style.left = (5 + Math.random()*90) + "vw";
+      sp.style.top  = (6 + Math.random()*88) + "vh";
+      sp.style.fontSize = (18 + Math.random()*22) + "px";
+      sp.style.opacity = (0.35 + Math.random()*0.45);
+      heartsFixed.appendChild(sp);
+    }
+  }
+
+  /* ====== Balloons ====== */
+  const balloonsLayer = document.getElementById("balloonsLayer");
+
+  function spawnBalloons(count=10){
+    for(let i=0;i<count;i++){
+      const balloon = document.createElement("div");
+      balloon.className="balloon";
+      balloon.style.left = Math.random()*100 + "vw";
+      balloon.style.animationDuration = (8 + Math.random()*10) + "s";
+      balloon.style.animationDelay = (Math.random()*3) + "s";
+      balloon.style.transform = `scale(${0.75 + Math.random()*0.9})`;
+      balloonsLayer.appendChild(balloon);
+
+      setTimeout(() => balloon.remove(), 22000);
+    }
+  }
+
+  // خلي العناصر جاهزة حتى قبل Start (بس الصفحة مخفية)
+  spawnBalloons(10);
+  setInterval(() => spawnBalloons(4), 2500);
+  placeFixedHearts(24);
+</script>
+
+</body>
+</html>
